@@ -101,6 +101,17 @@ public class JobController {
         .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
   }
 
+  @RequestMapping(value = "/groups/{group}/jobs/{name}/execute", method = RequestMethod.POST)
+  public ResponseEntity<Void> executeJob(@PathVariable String group, @PathVariable String name) {
+    JobKey jobKey = new JobKey(group, name);
+    if (!scheduler.checkExists(jobKey)) {
+      return ResponseEntity.notFound().build();
+    }
+
+    scheduler.triggerJob(jobKey);
+    return ResponseEntity.accepted().build();
+  }
+
   @RequestMapping(value = "/groups/{group}/jobs/{name}", method = RequestMethod.DELETE)
   public ResponseEntity<Void> deleteJob(@PathVariable String group, @PathVariable String name) {
     if (!scheduler.deleteJob(new JobKey(group, name))) {
