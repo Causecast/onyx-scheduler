@@ -109,6 +109,22 @@ public class Scheduler {
     }
   }
 
+  public boolean checkExists(JobKey jobKey) {
+    try {
+      return quartzScheduler.checkExists(jobKey.buildQuartzJobKey())
+    } catch (SchedulerException e) {
+      throw Throwables.propagate(e);
+    }
+  }
+
+  public void triggerJob(JobKey jobKey) {
+    try {
+        quartzScheduler.triggerJob(jobKey.buildQuartzJobKey());
+    } catch (SchedulerException e) {
+      throw Throwables.propagate(e);
+    }
+  }
+
   public boolean deleteJob(JobKey jobKey) {
     try {
       return quartzScheduler.deleteJob(jobKey.buildQuartzJobKey());
